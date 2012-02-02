@@ -1,0 +1,20 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Web-check not implemented on this system...
+Writing this text to log file [ D:\Work\NetBeansProjects\BioGUI\testFiles\ped\Unnamed_analysis.log ]
+Analysis started: Wed Feb 01 19:02:22 2012
+
+Options in effect:
+	--file D:\Work\NetBeansProjects\BioGUI\testFiles\ped\extra
+	--allow-no-sex
+	--out D:\Work\NetBeansProjects\BioGUI\testFiles\ped\Unnamed_analysis
+
+17 (of 17) markers to be included from [ D:\Work\NetBeansProjects\BioGUI\testFiles\ped\extra.map ]

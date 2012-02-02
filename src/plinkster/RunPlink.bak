@@ -1,0 +1,152 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package plinkster;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.exec.*;
+/**
+ *
+ * @author ahwan
+ */
+public class RunPlink {
+    private File plinkPath;
+    private StringBuilder sb;
+    long printJobTimeout = ExecuteWatchdog.INFINITE_TIMEOUT;
+    private boolean verbose = true;
+    private boolean plinkInBackground;
+    
+    public RunPlink(File pp){
+        plinkPath = pp;
+    }
+    
+    public void intiatePlink(LinkedHashMap<String, Object> cmd,boolean background) throws Exception{
+        boolean plinkInBackground = background;
+        RunPlinkHandler plinkResult;
+        
+        try{
+            if(verbose) System.out.println("[main] Preparing PLINK job ...");
+            plinkResult = runPlink(cmd);
+            if(verbose) System.out.println("[main] Successfully sent the PLINK job ...");
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("PLINK failed!");
+            throw e;
+        }
+        
+        if(verbose) System.out.println("[main] Test is exiting but waiting for the PLINK job to finish...");
+        plinkResult.waitFor();
+        if(verbose) System.out.println("[main] The PLINK job has finished ...");
+        
+    }
+    
+    public RunPlinkHandler runPlink(LinkedHashMap<String, Object> cmd) throws IOException{
+        int exitValue;
+        ExecuteWatchdog watchdog = null;
+        RunPlinkHandler resultHandler;
+        CommandLine commandLine = CommandLine.parse(command(cmd));
+        // create the executor and consider the exitValue '1' as success
+        Executor executor = new DefaultExecutor();
+        executor.setExitValue(0);
+        
+        // create a watchdog if requested
+        if (printJobTimeout > 0) {
+                watchdog = new ExecuteWatchdog(printJobTimeout);
+                executor.setWatchdog(watchdog);
+        }
+        
+        System.out.println(plinkInBackground);
+        // pass a "ExecuteResultHandler" when doing background printing
+        if (!plinkInBackground) {
+            if(verbose) System.out.println("[print] Executing non-blocking print job  ...");
+            resultHandler = new RunPlinkHandler(watchdog);
+            executor.execute(commandLine, resultHandler);
+        } else {
+            if(verbose) System.out.println("[print] Executing blocking print job  ...");
+            exitValue = executor.execute(commandLine);
+            resultHandler = new RunPlinkHandler(exitValue);
+        }
+        
+        return resultHandler;
+    }
+    
+    public String command(LinkedHashMap<String, Object> cmd){
+        sb = new StringBuilder();
+        sb.append(plinkPath.getPath());
+        
+        for (String c: cmd.keySet()){
+            sb.append(c);
+            sb.append(cmd.get(c));
+        }
+        
+        return sb.toString();
+    }
+    
+    private class RunPlinkHandler extends DefaultExecuteResultHandler {
+        private ExecuteWatchdog watchdog;
+
+        public RunPlinkHandler(ExecuteWatchdog watchdog) {
+                this.watchdog = watchdog;
+        }
+
+        public RunPlinkHandler(int exitValue) {
+                super.onProcessComplete(exitValue);
+        }
+
+        @Override
+        public void onProcessComplete(int exitValue) {
+                super.onProcessComplete(exitValue);
+                if(verbose) System.out.println("[resultHandler] Plink ran Successfully ...");
+        }
+
+        @Override
+        public void onProcessFailed(ExecuteException e) {
+                super.onProcessFailed(e);
+                if (watchdog != null && watchdog.killedProcess()) {
+                        System.err.println("[resultHandler] The PLINK process timed out");
+                } else {
+                        System.err.println("[resultHandler] The PLINK process failed to do : "+ e.getMessage());
+                }
+        }
+    }
+
+    /*
+    public static void main(String[] args) {
+       
+        File pathToPlink = new File(".//plinkBinaries//Windows//plink.exe");
+        //File plinkData = new File(".//testFiles//bed//test.bed");
+        File plinkData = new File("C://Users//ahwan//Desktop//large_beds//WTCCC_chosen-no_LD-EC-REGAIN.bed");
+        //----Strip file of extension-----//
+        String str = plinkData.getPath();
+        File plinkDataExtensionStripped = new File(str.substring(0, str.lastIndexOf('.')));
+        //---------------------------------
+        File workingDirectory = new File(".//testOutput");
+        
+        RunPlink rp = new RunPlink(pathToPlink);
+        LinkedHashMap<String, Object> cmdList = new LinkedHashMap<>();
+        cmdList.put(" --bfile ", plinkDataExtensionStripped);
+        cmdList.put(" --no-sex","");
+        cmdList.put(" --no-fid","");
+        cmdList.put(" --no-parents","");
+        cmdList.put(" --allow-no-sex","");
+        cmdList.put(" --missing-genotype ?","");
+        cmdList.put(" --map3","");
+        cmdList.put(" --regain","");
+        cmdList.put(" --out ",workingDirectory.getPath()+"/test");
+        try {
+            rp.intiatePlink(plinkDataExtensionStripped,cmdList);
+        } catch (Exception ex) {
+            Logger.getLogger(RunPlink.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("hahahahahahahahahahahah");
+    }
+    */
+    
+}

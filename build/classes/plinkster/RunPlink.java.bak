@@ -1,0 +1,98 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package plinkster;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.exec.*;
+/**
+ *
+ * @author ahwan
+ */
+public class RunPlink {
+    private File plinkPath;
+    private File workingDirect;
+    private StringBuilder sb;
+    public ExecuteWatchdog watchdog;
+    
+    public RunPlink(File pp, File wd){
+        plinkPath = pp;
+        workingDirect = wd;
+    }
+    
+    public void command(LinkedHashMap<String, Object> cmd){
+        sb = new StringBuilder();
+        sb.append(plinkPath.getPath());
+        
+        for (String c: cmd.keySet()){
+            sb.append(c);
+            sb.append(cmd.get(c));
+        }
+        
+        runCommand(sb.toString());
+    }
+    
+    private void runCommand(String cmd){
+        
+      CommandLine cmdLine = CommandLine.parse(cmd);
+      
+      DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
+      
+      watchdog = new ExecuteWatchdog(ExecuteWatchdog.INFINITE_TIMEOUT);
+      Executor executor = new DefaultExecutor();
+      executor.setExitValue(1);
+      executor.setWatchdog(watchdog);
+        try {
+            executor.execute(cmdLine, resultHandler);
+        } catch (ExecuteException ex) {
+            Logger.getLogger(RunPlink.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(RunPlink.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            resultHandler.waitFor();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(RunPlink.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //this contains the exitvalue, 1= error
+      
+      //System.out.println(resultHandler.getExitValue());
+    }
+    
+    public static void main(String[] args) {
+       
+        File pathToPlink = new File(".//plinkBinaries//Windows//plink.exe");
+        /*File plinkData = new File(".//testFiles//bed//test.bed");*/
+        File plinkData = new File("D://Work//NetBeansProjects//large_beds//WTCCC_chosen-no_LD-EC-REGAIN.bed");
+        //----Strip file of extension-----//
+        String str = plinkData.getPath();
+        File plinkDataExtensionStripped = new File(str.substring(0, str.lastIndexOf('.')));
+        //---------------------------------
+        File workingDirectory = new File(".//testOutput");
+        
+        RunPlink rp = new RunPlink(pathToPlink,workingDirectory);
+        LinkedHashMap<String, Object> cmdList = new LinkedHashMap<>();
+        cmdList.put(" --bfile ", plinkDataExtensionStripped);
+        cmdList.put(" --no-sex ","");
+        cmdList.put(" --no-fid ","");
+        cmdList.put(" --no-parents","");
+        cmdList.put(" --allow-no-sex","");
+        cmdList.put(" --missing-genotype ?","");
+        cmdList.put(" --map3","");
+        cmdList.put(" --regain","");
+        cmdList.put(" --out ",workingDirectory.getPath()+"//test");
+        
+        System.out.println("sending plink command");
+        rp.command(cmdList);
+        System.out.println("Sent PLINk command!");
+        
+    }
+    
+}
