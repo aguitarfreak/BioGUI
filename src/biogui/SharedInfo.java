@@ -16,7 +16,7 @@ public class SharedInfo {
     private File dataFile;
     private File plinkExecutable;
     private BooleanProperty fileInputAnalysisDone = new SimpleBooleanProperty(false);
-    private final int guiWidth = 800;
+    private final int guiWidth = 1024;
     private final int guiHeight = 768;
     private String analysisName = "Unnamed analysis";
     private String OSName;

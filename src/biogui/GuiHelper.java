@@ -52,8 +52,10 @@ public class GuiHelper {
         sharedInfo.setOSName(OSname);
         if(sharedInfo.getOSName().equalsIgnoreCase("Windows 7"))
             sharedInfo.setPlinkExecutable(windowsPLINKfile);
+        else if(sharedInfo.getOSName().equalsIgnoreCase("Linux"))
+            sharedInfo.setPlinkExecutable(linuxPLINKfile);
         else{
-            System.err.println("OS not yet implemented!");
+            System.err.println("OS ("+sharedInfo.getOSName()+") not yet implemented!");
             System.exit(1);
         }
         
