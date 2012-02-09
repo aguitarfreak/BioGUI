@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package biogui;
 
 /**
- *
- * @author ahwan
+ * A helper class to retrieve the name of the OS.
+ * @author Ahwan Pandey
  */
 
 public class GetOSName{

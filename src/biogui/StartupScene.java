@@ -1,12 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package biogui;
 
-import java.io.File;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,15 +12,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 /**
- *
- * @author ahwan
+ * The startup scene for the GUI. Contains a load analysis option(not yet implemented),
+ * and a new analysis option
+ * @see BioGUI
+ * @see GuiHelper
+ * @author Ahwan Pandey
  */
 public class StartupScene {
     
@@ -35,12 +28,16 @@ public class StartupScene {
     public Button buttonLoad;
     public Label status;
     public Label os;
-    Scene startupScene;
+    public Scene startupScene;
     private GuiHelper gh;
     private Stage pri;
     private HBox EnCore;
 
-    
+    /**
+     * The constructor takes an instance of the GuiHelper class and the primary stage.
+     * @param guiHelp An instance of the GuIHelper class
+     * @param primary The primary stage
+     */
     public StartupScene(GuiHelper guiHelp,Stage primary){
         pri = primary;
         gh = guiHelp;
@@ -51,7 +48,8 @@ public class StartupScene {
         buttonNew = new Button("New Analysis");
         status = new Label("");
         os = new Label(guiHelp.sharedInfo.getOSName());
-                
+        
+        //Create the EcCore logo---------------------------------------//
         Text En = new Text("En");
         En.setStyle("-fx-font-size: 80pt");
         Stop[] stops1 = new Stop[] { new Stop(0, Color.ORANGERED), new Stop(1, Color.MAROON)};
@@ -74,6 +72,7 @@ public class StartupScene {
         EnCore = new HBox();
         EnCore.getChildren().addAll(En,Core);
         EnCore.setAlignment(Pos.CENTER);
+        //--------------------------------------------------------------//
         
         optionsBox.setAlignment(Pos.CENTER);
         optionsBox.getChildren().addAll(os,EnCore,buttonLoad,buttonNew,status);
