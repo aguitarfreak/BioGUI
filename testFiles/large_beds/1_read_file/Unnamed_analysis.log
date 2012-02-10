@@ -1,0 +1,48 @@
+
+@----------------------------------------------------------@
+|        PLINK!       |     v1.07      |   10/Aug/2009     |
+|----------------------------------------------------------|
+|  (C) 2009 Shaun Purcell, GNU General Public License, v2  |
+|----------------------------------------------------------|
+|  For documentation, citation & bug-report instructions:  |
+|        http://pngu.mgh.harvard.edu/purcell/plink/        |
+@----------------------------------------------------------@
+
+Web-check not implemented on this system...
+Writing this text to log file [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\1_read_file\\Unnamed_analysis.log ]
+Analysis started: Fri Feb 10 14:31:07 2012
+
+Options in effect:
+	--bfile C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN
+	--no-sex
+	--no-fid
+	--no-parents
+	--allow-no-sex
+	--missing-genotype ?
+	--map3
+	--out C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\1_read_file\\Unnamed_analysis
+
+Reading map (extended format) from [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.bim ] 
+200 markers to be included from [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.bim ]
+Reading pedigree information from [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.fam ] 
+4806 individuals read from [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.fam ] 
+4806 individuals with nonmissing phenotypes
+Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
+Missing phenotype value is also -9
+1868 cases, 2938 controls and 0 missing
+0 males, 0 females, and 4806 of unspecified sex
+Warning, found 4806 individuals with ambiguous sex codes
+Writing list of these individuals to [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\1_read_file\\Unnamed_analysis.nosex ]
+Reading genotype bitfile from [ C:\Users\Ahwan\Documents\NetbeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.bed ] 
+Detected that binary PED file is v1.00 SNP-major mode
+Before frequency and genotyping pruning, there are 200 SNPs
+4806 founders and 0 non-founders found
+Total genotyping rate in remaining individuals is 1
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 200 SNPs
+After filtering, 1868 cases, 2938 controls and 0 missing
+After filtering, 0 males, 0 females, and 4806 of unspecified sex
+
+Analysis finished: Fri Feb 10 14:31:08 2012
+
