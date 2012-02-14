@@ -1,5 +1,6 @@
 package biogui;
 
+import java.io.File;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -50,6 +51,8 @@ public class BioGUI extends Application {
                 }
             }
         });
+        
+        
         
         primaryStage.show();
     }

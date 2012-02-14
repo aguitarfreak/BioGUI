@@ -29,7 +29,7 @@ public class MemoryPieChart {
     
     public MemoryPieChart(){
         mt = new MemoryTracker();
-        timer.schedule(mt, 0L, 1000L);
+        timer.schedule(mt, 0L, 3000L);
         
         PieChart.Data used = new PieChart.Data("Used", mt.usedMemory.getValue());
         PieChart.Data free = new PieChart.Data("Free", mt.freeMemory.getValue());
@@ -38,7 +38,7 @@ public class MemoryPieChart {
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(used,free);
         
         chart = new PieChart(pieChartData);
-        chart.setLabelLineLength(3);
+        chart.setLabelLineLength(5);
         chart.setLegendVisible(false);
         chart.setMinSize(130, 130);
         chart.setMaxSize(100,100);
@@ -49,16 +49,16 @@ public class MemoryPieChart {
 
         
         HBox memTextHbox = new HBox();
-        memTextHbox.setSpacing(3);
+        memTextHbox.setSpacing(2);
         //memTextHbox.setAlignment(Pos.TOP_CENTER);
-        memTextHbox.getChildren().addAll(new Label("F: "),freeText,new Label("U: "), usedText);
+        memTextHbox.getChildren().addAll(new Label("F:"),freeText,new Label("U:"), usedText);
         
         chartStack = new StackPane();
         chartStack.getChildren().add(memTextHbox);
         chartStack.getChildren().add(chart);
         chartStack.setMaxSize(100, 100);
         chartStack.setMinSize(100, 100);
-        chartStack.setStyle("-fx-background-color: silver");
+        chartStack.setStyle("-fx-background-color: azure");
         
     }
     

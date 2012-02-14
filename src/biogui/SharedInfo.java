@@ -13,6 +13,7 @@ public class SharedInfo {
     
     private final String separator = File.separator;
     private File workingDirectory;
+    private File originalDataFile;
     private File dataFile;
     private File plinkExecutable;
     private BooleanProperty fileInputAnalysisDone = new SimpleBooleanProperty(false);
@@ -28,7 +29,8 @@ public class SharedInfo {
     private final File styleFile = new File("."+File.separator+"resources"+
                                             File.separator+"styles"+
                                             File.separator+"biostyle.css");
-    
+    private File excludeOrIncludeSnpFile;
+    private File excludeOrIncludeSubjFile;
     /**
      * Method to set working directory
      * @param wd The working directory
@@ -67,6 +69,29 @@ public class SharedInfo {
      */
     public void setDataFile(File data){
         dataFile = data;
+    }
+    
+    /**
+     * Set the original data file
+     */
+    public void setOriginalDataFile(File data){
+        originalDataFile = data;
+    }
+    
+    /**
+     * 
+     * @return Set snplist that needs to be excluded from or included into the data.
+     */
+    public void setExcludeOrIncludeSnpFile(File list){
+        excludeOrIncludeSnpFile = list;
+    }
+    
+    /**
+     * 
+     * @return Set subject-list that needs to be excluded from or included into the data.
+     */
+    public void setExcludeOrIncludeSubjFile(File list){
+        excludeOrIncludeSubjFile = list;
     }
     
     /**
@@ -158,6 +183,26 @@ public class SharedInfo {
         return dataFile;
     }
     
+    public File getOriginalDataFile(){
+        return originalDataFile;
+    }
+    
+    /**
+     * 
+     * @return snplist that needs to be excluded from or included into the data.
+     */
+    public File getExcludeOrIncludeSnpFile(){
+        return excludeOrIncludeSnpFile;
+    }
+    
+    /**
+     * 
+     * @return subject-list that needs to be excluded from or included into the data.
+     */
+    public File getExcludeOrIncludeSubjFile(){
+        return excludeOrIncludeSubjFile;
+    }
+    
     /**
      * 
      * @return The width of the GUI
@@ -213,4 +258,5 @@ public class SharedInfo {
     public BooleanProperty getPlinkRunning(){
         return isPlinkRunning;
     }
+    
 }

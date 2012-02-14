@@ -2,6 +2,8 @@ package biogui;
 
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.commons.exec.*;
 
 /**
@@ -95,31 +97,65 @@ public class RunPlink{
             switch(mode){
                 case "readfile":
                     if(line.toUpperCase().contains("markers to be included from".toUpperCase()))
-                        dataProperties.setNumMarkers(getValue(line, 0,"markers"));
+                        dataProperties.setNumMarkers(getValueBetween(line, 0,"markers"));
                     else if(line.toUpperCase().contains("individuals read from".toUpperCase()))
-                        dataProperties.setNumIndividuals(getValue(line,0,"individuals"));
+                        dataProperties.setNumIndividuals(getValueBetween(line,0,"individuals"));
                     else if(line.toUpperCase().contains("controls and".toUpperCase()) &&
                             !(line.toUpperCase().contains("After filtering".toUpperCase()))){
-                        dataProperties.setNumCases(getValue(line,0,"cases"));
-                        dataProperties.setNumControls(getValue(line,",","controls"));
-                        dataProperties.setNumMissing(getValue(line,"and","missing"));
+                        dataProperties.setNumCases(getValueBetween(line,0,"cases"));
+                        dataProperties.setNumControls(getValueBetween(line,",","controls"));
+                        dataProperties.setNumMissing(getValueBetween(line,"and","missing"));
                     }
                     else if(line.toUpperCase().contains("males".toUpperCase()) &&
                             !(line.toUpperCase().contains("After filtering".toUpperCase()))){
-                        dataProperties.setNumMales(getValue(line,0,"males"));
-                        dataProperties.setNumFemales(getValue(line,",","females"));
-                        dataProperties.setNumUnspecifiedSex(getValue(line,"and","of"));
+                        dataProperties.setNumMales(getValueBetween(line,0,"males"));
+                        dataProperties.setNumFemales(getValueBetween(line,",","females"));
+                        dataProperties.setNumUnspecifiedSex(getValueBetween(line,"and","of"));
                     }
                    break;
+                    
+                case "extract_or_include":
+                    if(line.toUpperCase().contains("Reading individuals".toUpperCase()))
+                        dataProperties.setExcludeOrIncludeSubjCount(getValueBetween(line, "...","read"));
+                    else if(line.toUpperCase().contains("Reading list of SNPs".toUpperCase()))
+                        dataProperties.setExcludeOrIncludeSnpCount(getValueBetween(line, "...","read"));
+                    
+                    break;
+                    
+                case "data_driven":
+                    if(line.toUpperCase().contains("low genotyping".toUpperCase()))
+                        dataProperties.setNumOfSubjsRemovedByddFilter(getValueBetween(line, 0,"of"));
+                    else if(line.toUpperCase().contains("failed missingness test".toUpperCase()))
+                        dataProperties.setNumOfSnpsRemovedByddFilter(getValueBetween(line, 0,"SNPs"));
+                    else if(line.toUpperCase().contains("failed frequency test".toUpperCase()))
+                        dataProperties.setNumOfSnpsRemovedByddFilter(getValueBetween(line, 0,"SNPs"));
+                    break;
+                 
+                case "ld_prune":
+                    if(line.toUpperCase().contains("Scan region".toUpperCase())){
+                        int chr = getValueBetween(line, "chromosome","from");
+                        dataProperties.setOnCromosomeLd(chr);
+                        dataProperties.updateLdProgressbar();
+                        
+                    }
+                    else if(line.toUpperCase().contains("Scanning from chromosome".toUpperCase())){
+                        dataProperties.setTotalChromosomes(getValueBetween(line,"to",line.length()));
+                    }
+                    break;
+                    
             }
         }
         
-        protected int getValue(String l, String a, String b){
+        protected int getValueBetween(String l, String a, String b){
             return Integer.parseInt(l.substring(l.indexOf(a)+(a.length()+1), l.indexOf(b)-1).trim());
         }
         
-        protected int getValue(String l, int a, String b){
+        protected int getValueBetween(String l, int a, String b){
             return Integer.parseInt(l.substring(a, l.indexOf(b)-1).trim());
+        }
+        
+        protected int getValueBetween(String l, String a, int b){
+            return Integer.parseInt(l.substring(l.indexOf(a)+a.length()).trim() );
         }
     }
     

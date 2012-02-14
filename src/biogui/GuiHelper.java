@@ -91,36 +91,58 @@ public class GuiHelper {
         String output = sharedInfo.getWorkingDirectory().toString()
                         +File.separator+strDirectory;
         boolean success = (new File(output)).mkdir();
-                            if (success) {
-                                System.out.println("Directory: " 
-                                    + strDirectory + " created");
-                            } 
+//                            if (success) {
+//                                System.out.println("Directory: " 
+//                                    + strDirectory + " created");
+//                            } 
                             
-        String analysisReNamed = File.separator+sharedInfo.getAnalysisName().replace(" ", "_");
+        String analysisReNamed = sharedInfo.getAnalysisName().replace(" ", "_");
         return (output+File.separator+analysisReNamed);
     }
     
     /**
-     * Opens a dialog to select a data file.
+     * Opens a dialog to select a file. The selection criteria can be modified
+     * by passing in a type of file parameter.
      * @param s The stage for a modal view
      * @param ext a list of ExtensionFilters to limit file options.
+     * @param typeOfFile What kind of file to read in (data, exclusion list, covariate etc...)
      */
-    public void chooseDataFile(Stage s, List<FileChooser.ExtensionFilter> ext){
+    public void chooseFile(Stage pri, List<FileChooser.ExtensionFilter> ext, String typeOfFile){
         fc = new FileChooser();
-        fc.setTitle("Select Data File");
+        
         File d = new File(getClass().getResource("."+File.separator).getFile());
         //fc.setInitialDirectory(new File("D://Work//NetBeansProjects//large_beds"));
         for (FileChooser.ExtensionFilter ef: ext)
             fc.getExtensionFilters().add(ef);
-        File f = fc.showOpenDialog(s);
-        if(f!=null){
-            sharedInfo.setDataFile(f);
-            //----Strip file of extension-----//
-            String str = sharedInfo.getDataFile().getPath();
-            File plinkDataExtensionStripped = new File(str.substring(0, str.lastIndexOf('.')));
-            extension = str.substring(str.lastIndexOf('.')+1,str.length());
-            sharedInfo.setPlinkDataExtensionStripped(plinkDataExtensionStripped);
-            sharedInfo.setPlinkDataExtension(extension);
+        
+        if(typeOfFile.equals("data")){
+            fc.setTitle("Select Data File");
+            File f = fc.showOpenDialog(pri);
+            if(f!=null){
+                sharedInfo.setDataFile(f);
+                //----Strip file of extension-----//
+                String str = sharedInfo.getDataFile().getPath();
+                File plinkDataExtensionStripped = new File(str.substring(0, str.lastIndexOf('.')));
+                extension = str.substring(str.lastIndexOf('.')+1,str.length());
+                sharedInfo.setPlinkDataExtensionStripped(plinkDataExtensionStripped);
+                sharedInfo.setPlinkDataExtension(extension);
+            }
+        }
+        
+        else if (typeOfFile.equals("snp-list")){
+            fc.setTitle("Select SNP Exclusion/Inclusion list file");
+            File f = fc.showOpenDialog(pri);
+            if(f!=null){
+                sharedInfo.setExcludeOrIncludeSnpFile(f);
+            }
+        }
+        
+        else if (typeOfFile.equals("subj-list")){
+            fc.setTitle("Select SUBJET Exclusion/Inclusion list file");
+            File f = fc.showOpenDialog(pri);
+            if(f!=null){
+                sharedInfo.setExcludeOrIncludeSubjFile(f);
+            }
         }
     }
     
@@ -141,6 +163,7 @@ public class GuiHelper {
             System.out.println("males: "+dataProperties.getNumMales());
             System.out.println("females: "+dataProperties.getNumFemales());
             System.out.println("unspecified sex: "+dataProperties.getNumUnspecifiedSex());*/
+            //System.out.println("Snps removed: "+dataProperties.getExcludeOrIncludeSnpCount());
         } catch (Exception ex) {
             Logger.getLogger(GuiHelper.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -158,5 +181,27 @@ public class GuiHelper {
      * 
      * @return The Pie chart containing memory info.
      */
+    
+    public void updatePlinkDataFile(String folderName){
+        sharedInfo.setDataFile(new File(sharedInfo.getWorkingDirectory().getAbsolutePath()
+                                         +File.separator+folderName
+                                         +File.separator+sharedInfo.getAnalysisName().replace(" ","_")+"."+sharedInfo.getPlinkDataExtension()));
+        //----Strip file of extension-----//
+        String str = sharedInfo.getDataFile().getPath();
+        File plinkDataExtensionStripped = new File(str.substring(0, str.lastIndexOf('.')));
+        extension = str.substring(str.lastIndexOf('.')+1,str.length());
+        sharedInfo.setPlinkDataExtensionStripped(plinkDataExtensionStripped);
+        sharedInfo.setPlinkDataExtension(extension);
+    }
+    
+    public void resetPlinkDataFile(File f){
+        sharedInfo.setDataFile(f);
+        //----Strip file of extension-----//
+        String str = sharedInfo.getDataFile().getPath();
+        File plinkDataExtensionStripped = new File(str.substring(0, str.lastIndexOf('.')));
+        extension = str.substring(str.lastIndexOf('.')+1,str.length());
+        sharedInfo.setPlinkDataExtensionStripped(plinkDataExtensionStripped);
+        sharedInfo.setPlinkDataExtension(extension);
+    }
     
 }

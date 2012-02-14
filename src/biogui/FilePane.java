@@ -81,8 +81,8 @@ public class FilePane{
         loadFileTf.setStyle("-fx-background-color: paleturquoise");
         loadFileTf.setEditable(false);
         //loadFileTf.setMaxWidth(300);
-        loadFileBtn = new Button("...");
-        readFileBtn = new Button("Read File");
+        loadFileBtn = new Button("..."); 
+        readFileBtn = new Button("Read File"); 
         
         //DATA FLAGS SECTION
         String[] dataFlagsCbx = guiHelp.sharedInfo.getDataFlagsForCheckBox();
