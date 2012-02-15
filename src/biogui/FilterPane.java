@@ -72,11 +72,11 @@ public class FilterPane {
         preFiltersTab.setContent(preFilterVBox);
             //----EXCLUSION FILTERS------//
             HBox exclusionFiltersHbox = new HBox();
-            exclusionFiltersHbox.setPadding(new Insets(10,10,10,10));
+            exclusionFiltersHbox.setPadding(new Insets(5,5,5,5));
             exclusionFiltersHbox.setAlignment(Pos.BASELINE_LEFT);
             exclusionFiltersCbx = new CheckBox();
             
-                Label plinkExclusionFiltersLbl = new Label("PLINK Exclusion/Inclusion Filters: ");
+                Label plinkExclusionFiltersLbl = new Label("Exclusion/Inclusion Filters: ");
                 plinkExclusionFiltersLbl.setUnderline(true);
 
                 Label snpLbl = new Label("SNP: ");
@@ -136,10 +136,10 @@ public class FilterPane {
             
             //----DATA FILTERS------//
             HBox dataFiltersHbox = new HBox();
-            dataFiltersHbox.setPadding(new Insets(10,10,10,10));
+            dataFiltersHbox.setPadding(new Insets(5,5,5,5));
             dataFiltersHbox.setAlignment(Pos.BASELINE_LEFT);
             dataFiltersCbx = new CheckBox();
-                    Label plinkDataFiltersLbl = new Label("PLINK Data-driven Filters: ");
+                    Label plinkDataFiltersLbl = new Label("Data-driven Filters: ");
                     plinkDataFiltersLbl.setUnderline(true);
                     HBox rowOne = new HBox();
                     rowOne.setSpacing(5);
@@ -181,7 +181,7 @@ public class FilterPane {
                 preFilterVBox.getChildren().add(dataFiltersHbox);
                         
                 HBox rowThree = new HBox();
-                rowThree.setPadding(new Insets(10,10,10,10));
+                rowThree.setPadding(new Insets(5,5,5,5));
                 rowThree.setAlignment(Pos.BASELINE_LEFT);
                 rowThree.setStyle("-fx-background-color: lightblue");
                 rowThree.setSpacing(5);
@@ -196,11 +196,11 @@ public class FilterPane {
 
                preFilterVBox.getChildren().add(rowThree); 
                
-                //RUN PLINK
+                //RUN FILTERS
                 HBox rowFour = new HBox();
                 rowFour.setPadding(new Insets(2,2,2,2));
                 rowFour.setAlignment(Pos.BASELINE_LEFT);
-                        runPlinkBtn = new Button("Run PLINK");
+                        runPlinkBtn = new Button("Run Filters");
                         rowFour.setPadding(new Insets(10,10,10,10));
                         rowFour.setStyle("-fx-background-color: lightsteelblue");
                         rowFour.setAlignment(Pos.CENTER);
@@ -214,8 +214,8 @@ public class FilterPane {
                 ColumnConstraints col3 = new ColumnConstraints(70); //col3.setHalignment(HPos.RIGHT);
                 ColumnConstraints col4 = new ColumnConstraints(70);
                 runPlinkGrid.getColumnConstraints().addAll(col1,col2,col3,col4);
-                runPlinkGrid.setPadding(new Insets(10,10,10,10));
-                runPlinkGrid.setVgap(2);
+                runPlinkGrid.setPadding(new Insets(5,5,5,5));
+                runPlinkGrid.setVgap(1);
                 runPlinkGrid.setStyle("-fx-background-color: lightcyan");
 
                 Label extractFilterLbl = new Label("Running extraction/inclusion filters: ");
@@ -262,7 +262,7 @@ public class FilterPane {
                 Label ldPruneLbl = new Label("LD-pruning data: ");
                 ldBar = new ProgressBar(0);
                 ldBar.setVisible(false);
-                ldBar.setPrefSize(400,400);
+                ldBar.setPrefSize(400,200);
                 HBox ldStatusHbox = new HBox();
                 ldStatusHbox.setAlignment(Pos.CENTER);
                 ldStatusHbox.setStyle("-fx-background-color: lightskyblue");
@@ -270,11 +270,15 @@ public class FilterPane {
                 ldStatusTxt.textProperty().bind(gh.dataProperties.getOnCromosomeLd().asString());
                 Text numofChromosomes = new Text();
                 numofChromosomes.textProperty().bind(gh.dataProperties.getNumOfChromosomes().asString());
-                ldStatusHbox.getChildren().addAll(ldStatusTxt, new Label("/"),numofChromosomes);
+                ldStatusHbox.getChildren().addAll(new Label("On Chr:\t"),ldStatusTxt, new Label("/"),numofChromosomes);
                 ldPruneStatsGrid.add(ldPruneLbl,0,0);
                 ldPruneStatsGrid.add(ldBar,1,0);
                 ldPruneStatsGrid.add(ldStatusHbox,2,0);
-             preFilterVBox.getChildren().add(ldPruneStatsGrid);   
+             preFilterVBox.getChildren().add(ldPruneStatsGrid);
+             
+             Text scanningRegion = new Text("tetetetet");
+                scanningRegion.textProperty().bind(gh.dataProperties.getScanningRegion());
+             preFilterVBox.getChildren().add(scanningRegion);
                     
           
         //-------------------------------------------------//

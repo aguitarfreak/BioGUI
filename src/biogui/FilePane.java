@@ -117,10 +117,10 @@ public class FilePane{
         //DATA INFO SECTION
         //----
         GridPane dataInfoGrid = new GridPane();
-        dataInfoGrid.visibleProperty().bind(gh.sharedInfo.getfileInputComplete());
+        //dataInfoGrid.visibleProperty().bind(gh.sharedInfo.getfileInputComplete());
         ColumnConstraints col1 = new ColumnConstraints(130); //col1.setHalignment(HPos.RIGHT);
         ColumnConstraints col2 = new ColumnConstraints(80); //col2.setHalignment(HPos.LEFT);
-        ColumnConstraints col3 = new ColumnConstraints(70); //col3.setHalignment(HPos.RIGHT);
+        ColumnConstraints col3 = new ColumnConstraints(90); //col3.setHalignment(HPos.RIGHT);
         ColumnConstraints col4 = new ColumnConstraints(80); //col4.setHalignment(HPos.LEFT);
         ColumnConstraints col5 = new ColumnConstraints(70); //col5.setHalignment(HPos.RIGHT);
         ColumnConstraints col6 = new ColumnConstraints(80); //col6.setHalignment(HPos.LEFT);
@@ -153,6 +153,12 @@ public class FilePane{
         Label numUnspecifiedSexLbl = new Label("Unspecified: "); dataInfoGrid.add(numUnspecifiedSexLbl, 4, 3);
         Text numUnspecifiedSexTxt = new Text(); dataInfoGrid.add(numUnspecifiedSexTxt, 5, 3);
         numUnspecifiedSexTxt.textProperty().bind(gh.dataProperties.getNumUnspecifiedSex().asString());
+        Label numFoundersLbl = new Label("Number of founders: "); dataInfoGrid.add(numFoundersLbl,0,4);
+        Text numFoundersTxt = new Text(); dataInfoGrid.add(numFoundersTxt,1,4);
+        numFoundersTxt.textProperty().bind(gh.dataProperties.getNumFounders().asString());
+        Label numNonFoundersLbl = new Label("Non-founders: "); dataInfoGrid.add(numNonFoundersLbl,2,4);
+        Text numNonFoundersTxt = new Text(); dataInfoGrid.add(numNonFoundersTxt,3,4);
+        numNonFoundersTxt.textProperty().bind(gh.dataProperties.getNumNonFounders().asString());
         //------
         
         loadFileGrid = new GridPane();

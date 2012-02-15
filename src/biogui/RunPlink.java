@@ -112,6 +112,10 @@ public class RunPlink{
                         dataProperties.setNumFemales(getValueBetween(line,",","females"));
                         dataProperties.setNumUnspecifiedSex(getValueBetween(line,"and","of"));
                     }
+                    else if(line.toUpperCase().contains("founders".toUpperCase())){
+                            dataProperties.setNumFounders(getValueBetween(line, 0,"founders"));
+                            dataProperties.setNumNonFounders(getValueBetween(line, "and","non-founders"));
+                    }
                    break;
                     
                 case "extract_or_include":
@@ -132,15 +136,27 @@ public class RunPlink{
                     break;
                  
                 case "ld_prune":
-                    if(line.toUpperCase().contains("Scan region".toUpperCase())){
+                    if(line.toUpperCase().contains("Scanning from chromosome".toUpperCase())){
+                        if((line.substring(line.indexOf("to")+"to".length()).trim()).equals("MT")){
+                            dataProperties.setTotalChromosomes(26);
+                        }
+                        else
+                            dataProperties.setTotalChromosomes(getValueBetween(line,"to"));
+                    }
+                    else if(line.toUpperCase().contains("Scan region".toUpperCase())){  
                         int chr = getValueBetween(line, "chromosome","from");
                         dataProperties.setOnCromosomeLd(chr);
                         dataProperties.updateLdProgressbar();
+                        dataProperties.setScanningRegion(line);
                         
                     }
-                    else if(line.toUpperCase().contains("Scanning from chromosome".toUpperCase())){
-                        dataProperties.setTotalChromosomes(getValueBetween(line,"to",line.length()));
+                    else if(line.toUpperCase().contains("Analysis finished".toUpperCase())){
+                        dataProperties.setLdProgressDone();
                     }
+                    break;
+                
+                case "ld_extract":
+                    //System.err.println(line);
                     break;
                     
             }
@@ -154,7 +170,7 @@ public class RunPlink{
             return Integer.parseInt(l.substring(a, l.indexOf(b)-1).trim());
         }
         
-        protected int getValueBetween(String l, String a, int b){
+        protected int getValueBetween(String l, String a){
             return Integer.parseInt(l.substring(l.indexOf(a)+a.length()).trim() );
         }
     }

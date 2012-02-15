@@ -14,6 +14,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -52,8 +54,8 @@ public class AnalysisScene {
     Boolean ld = false;
     //folders for finterPane stages
     String excludeExtractFldr = "2_extraction_inclusion_filters";
-    String dataDrivenFldr = "3_PLINK_data_driven_filters";
-    String ldFldr = "4_PLINK_ld_prune";
+    String dataDrivenFldr = "3_data_driven_filters";
+    String ldFldr = "4_ld_prune";
     
     //--------PANES---------//
     FilePane filePane;
@@ -144,8 +146,8 @@ public class AnalysisScene {
                     public void handle(ActionEvent event) {
 
                         List<FileChooser.ExtensionFilter> extensions = new ArrayList<>();
-                        extensions.add(new FileChooser.ExtensionFilter("PLINK Binary file (*.bed)","*.bed"));
-                        extensions.add(new FileChooser.ExtensionFilter("PLINK Pedigree file (*.ped)","*.ped"));
+                        extensions.add(new FileChooser.ExtensionFilter("Binary file (*.bed)","*.bed"));
+                        extensions.add(new FileChooser.ExtensionFilter("Pedigree file (*.ped)","*.ped"));
 
                         gh.chooseFile(pri, extensions, "data");
                         if(gh.sharedInfo.getDataFile()!=null){
@@ -330,8 +332,16 @@ public class AnalysisScene {
                                                                     " "+filterPane.ldPruneStepTf.getText()+
                                                                     " "+filterPane.ldPruneThresholdTf.getText());
                                     //dataFlags.put(" --make-bed","");
-                                    dataFlags.put(" --out ",gh.createDirectory(ldFldr));
+                                    String output = gh.createDirectory(ldFldr);
+                                    dataFlags.put(" --out ",output);
                                     gh.runPLINKcmd(dataFlags,"ld_prune");
+                                    dataFlags.remove(" --indep-pairwise ");
+                                    dataFlags.remove(" --out ");
+                                    
+                                    dataFlags.put(" --extract ",output+".prune.in");
+                                    dataFlags.put(" --make-bed","");
+                                    dataFlags.put(" --out ",output);
+                                    gh.runPLINKcmd(dataFlags,"ld_extract");
                                     gh.updatePlinkDataFile(ldFldr);
 
                                     //filterPane.ldBar.setProgress(1);
@@ -375,6 +385,8 @@ public class AnalysisScene {
             public void handle(WindowEvent event){
                 if(runPlinkFlags.isRunning())
                     runPlinkFlags.cancel();
+                if(runPlinkDataFilters.isRunning())
+                    runPlinkDataFilters.cancel();
                 mpc.timer.cancel();
             }
         });

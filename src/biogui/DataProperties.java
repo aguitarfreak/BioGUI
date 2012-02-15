@@ -20,6 +20,8 @@ public class DataProperties {
     private IntegerProperty numMales = new SimpleIntegerProperty();
     private IntegerProperty numFemales = new SimpleIntegerProperty();
     private IntegerProperty numUnspecifiedSex = new SimpleIntegerProperty();
+    private IntegerProperty numFounders = new SimpleIntegerProperty();
+    private IntegerProperty numNonFounders = new SimpleIntegerProperty();
     
     private IntegerProperty excludeOrIncludeSnpCount = new SimpleIntegerProperty();
     private IntegerProperty excludeOrIncludeSubjCount = new SimpleIntegerProperty();
@@ -29,6 +31,8 @@ public class DataProperties {
     private IntegerProperty totalChromosomes = new SimpleIntegerProperty();
     private IntegerProperty onChromosomeLd = new SimpleIntegerProperty();
     private DoubleProperty updateLdProgressBar = new SimpleDoubleProperty();
+    private StringProperty scanningRegionChr = new SimpleStringProperty();
+    
     
     //-----------------SETTERS------------------//
     public void setNumMarkers(int num){
@@ -62,6 +66,14 @@ public class DataProperties {
     public void setNumUnspecifiedSex(int num){
         numUnspecifiedSex.set(num);
     }
+    
+    public void setNumFounders(int num){
+        numFounders.set(num);
+    }
+    
+    public void setNumNonFounders(int num){
+        numNonFounders.set(num);
+    }    
     
     /**
      * 
@@ -103,6 +115,14 @@ public class DataProperties {
         updateLdProgressBar.set((updateLdProgressBar.get()+onChromosomeLd.get())/totalChromosomes.get());
     }
     
+    public void setLdProgressDone(){
+        updateLdProgressBar.set(1);
+    }
+    
+    public void setScanningRegion(String region){
+        scanningRegionChr.set(region);
+    }
+    
     //-------------GETTERS-----------------------//
     public IntegerProperty getNumMarkers(){
         return numMarkers;
@@ -136,6 +156,13 @@ public class DataProperties {
         return numUnspecifiedSex;
     }
     
+    public IntegerProperty getNumFounders(){
+        return numFounders;
+    }
+    
+    public IntegerProperty getNumNonFounders(){
+        return numNonFounders;
+    }     
     /**
      * 
      * @return Number of snps that will be excluded or included
@@ -169,5 +196,9 @@ public class DataProperties {
     
     public DoubleProperty getLdProgress(){
         return updateLdProgressBar;
+    }
+    
+    public StringProperty getScanningRegion(){
+        return scanningRegionChr;
     }
 }

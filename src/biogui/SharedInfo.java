@@ -29,8 +29,12 @@ public class SharedInfo {
     private final File styleFile = new File("."+File.separator+"resources"+
                                             File.separator+"styles"+
                                             File.separator+"biostyle.css");
+    private final File imagesFolder = new File("."+File.separator+"resources"+
+                                                File.separator+"images"+File.separator);
     private File excludeOrIncludeSnpFile;
     private File excludeOrIncludeSubjFile;
+    
+    private File ldPrunedOutFile;
     /**
      * Method to set working directory
      * @param wd The working directory
@@ -125,6 +129,10 @@ public class SharedInfo {
      */
     public void setPlinkRunning(boolean isRunning){
         isPlinkRunning.set(isRunning);
+    }
+    
+    public void setLdPrunedOutFile(File file){
+        ldPrunedOutFile = file;
     }
     
     //-------------------------------------
@@ -257,6 +265,14 @@ public class SharedInfo {
      */
     public BooleanProperty getPlinkRunning(){
         return isPlinkRunning;
+    }
+    
+    public File getImagesFolder(){
+        return imagesFolder;
+    }
+    
+    public File getLdPrunedOutFile(){
+        return ldPrunedOutFile;
     }
     
 }
