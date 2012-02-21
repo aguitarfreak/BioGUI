@@ -1,5 +1,6 @@
 package biogui;
 
+import ModelTests.*;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -51,6 +52,8 @@ public class FilterPane {
     
     protected CheckBox exclusionFiltersCbx;
     protected CheckBox dataFiltersCbx;
+    
+    protected ModelVbox mVbox;
     
     FilterPane(GuiHelper gh) {
         guiHelp = gh;
@@ -284,13 +287,15 @@ public class FilterPane {
         //-------------------------------------------------//
         
         //-----------FILTERING ALGORITHMS------------------//
-        
-        
+        //PLINK MODEL-------------------------------------//
+             Tab modelFiltersTab = new Tab("Model Filters");
+             mVbox = new ModelVbox(guiHelp);
+             modelFiltersTab.setContent(mVbox.getModelVbox());
         
         
         //-------------------------------------------------//
         
-        filterTabPanes.getTabs().addAll(preFiltersTab);
+        filterTabPanes.getTabs().addAll(preFiltersTab,modelFiltersTab);
         filterPane.setContent(filterTabPanes);
         filterPane.disableProperty().bind(gh.sharedInfo.getfileInputComplete().not());
     }

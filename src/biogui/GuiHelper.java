@@ -66,7 +66,6 @@ public class GuiHelper {
         
         rp = new RunPlink(sharedInfo.getPlinkExecutable(),dataProperties);
         
-        
     }
     
     /**
@@ -202,6 +201,12 @@ public class GuiHelper {
         extension = str.substring(str.lastIndexOf('.')+1,str.length());
         sharedInfo.setPlinkDataExtensionStripped(plinkDataExtensionStripped);
         sharedInfo.setPlinkDataExtension(extension);
+    }
+    
+    public void updatePlinkModelFile(String folderName){
+        sharedInfo.setPlinkModelFile(new File(sharedInfo.getWorkingDirectory().getAbsolutePath()
+                                         +File.separator+folderName
+                                         +File.separator+sharedInfo.getAnalysisName().replace(" ","_")+".model"));
     }
     
 }

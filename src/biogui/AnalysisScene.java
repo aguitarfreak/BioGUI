@@ -56,6 +56,7 @@ public class AnalysisScene {
     String excludeExtractFldr = "2_extraction_inclusion_filters";
     String dataDrivenFldr = "3_data_driven_filters";
     String ldFldr = "4_ld_prune";
+    String modelFldr = "5_model_test";
     
     //--------PANES---------//
     FilePane filePane;
@@ -346,6 +347,8 @@ public class AnalysisScene {
 
                                     //filterPane.ldBar.setProgress(1);
                                 }
+                                filePane.loadFileTf.setText(gh.sharedInfo.getDataFile().getAbsolutePath());
+                                
                                 
                                 gh.sharedInfo.setPlinkRunning(false);
                                 
@@ -354,15 +357,68 @@ public class AnalysisScene {
                         };
                     }
                 };
-                
                 filterPane.runPlinkBtn.disableProperty().bind(runPlinkDataFilters.runningProperty());
-                
                 filterPane.runPlinkBtn.setOnAction(new EventHandler<ActionEvent>(){
                     @Override
                     public void handle(ActionEvent event) {
                         if (!runPlinkDataFilters.isRunning()) {
                             runPlinkDataFilters.restart();
-                            //runPlinkFlags.start();
+                        }
+
+                    }
+                });
+                
+                
+                final Service runModelTest = new Service() {
+                    @Override 
+                    protected Task createTask() {
+                        return new Task() {
+                        @Override 
+                            protected Object call() throws InterruptedException {
+                                //run the plink --model stuff first
+                                filterPane.mVbox.runModelBtn.setDisable(true);
+                                gh.sharedInfo.setPlinkRunning(true);
+                                LinkedHashMap<String,Object> dataFlags = new LinkedHashMap<>();
+                                dataFlags.put(gh.getFileTypeFlag(),gh.sharedInfo.plinkDataExtensionStripped());
+                                for(CheckBox c : filePane.cbs)
+                                    if(c.isSelected())
+                                        dataFlags.put(" "+c.getText(),"");
+                                
+                                dataFlags.put(" --model","");
+                                dataFlags.put(" --ci ","0.95");
+                                
+                                String output = gh.createDirectory(modelFldr);
+                                dataFlags.put(" --out ",output);
+                                gh.sharedInfo.setPlinkRunning(true);
+                                
+                                filterPane.mVbox.runningModelTest.set(1);
+                                    gh.runPLINKcmd(dataFlags,"model_tests");
+                                filterPane.mVbox.runningModelTest.set(0.1);
+                                dataFlags.remove(" --model");
+                                dataFlags.remove(" --out ");
+                                dataFlags.put(" --assoc","");
+                                dataFlags.put(" --out ", output);
+                                filterPane.mVbox.runningAssocTest.set(1);
+                                    gh.runPLINKcmd(dataFlags,"model_tests");
+                                filterPane.mVbox.runningAssocTest.set(0.1);
+                                
+                                gh.updatePlinkModelFile(modelFldr);
+                                
+                                filterPane.mVbox.updateModelData();
+                                
+                                filterPane.mVbox.runModelBtn.setDisable(false);
+                                gh.sharedInfo.setPlinkRunning(false);
+
+                                return true;
+                            }
+                        };
+                    }
+                };
+                filterPane.mVbox.runModelBtn.setOnAction(new EventHandler<ActionEvent>(){
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (!runModelTest.isRunning()) {
+                            runModelTest.restart();
                         }
 
                     }
@@ -387,6 +443,8 @@ public class AnalysisScene {
                     runPlinkFlags.cancel();
                 if(runPlinkDataFilters.isRunning())
                     runPlinkDataFilters.cancel();
+                if(runModelTest.isRunning())
+                    runModelTest.cancel();
                 mpc.timer.cancel();
             }
         });

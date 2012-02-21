@@ -9,13 +9,15 @@
 @----------------------------------------------------------@
 
 Web-check not implemented on this system...
-Writing this text to log file [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\1_read_file\Unnamed_analysis.log ]
-Analysis started: Tue Feb 21 15:16:20 2012
+Writing this text to log file [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\5_model_test\Unnamed_analysis.log ]
+Analysis started: Tue Feb 21 15:16:36 2012
 
 Options in effect:
 	--bfile D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN
 	--allow-no-sex
-	--out D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\1_read_file\Unnamed_analysis
+	--ci 0.95
+	--assoc
+	--out D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\5_model_test\Unnamed_analysis
 
 Reading map (extended format) from [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.bim ] 
 200 markers to be included from [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.bim ]
@@ -27,7 +29,7 @@ Missing phenotype value is also -9
 1868 cases, 2938 controls and 0 missing
 0 males, 0 females, and 4806 of unspecified sex
 Warning, found 4806 individuals with ambiguous sex codes
-Writing list of these individuals to [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\1_read_file\Unnamed_analysis.nosex ]
+Writing list of these individuals to [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\5_model_test\Unnamed_analysis.nosex ]
 Reading genotype bitfile from [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN.bed ] 
 Detected that binary PED file is v1.00 SNP-major mode
 Before frequency and genotyping pruning, there are 200 SNPs
@@ -38,6 +40,7 @@ Total genotyping rate in remaining individuals is 1
 After frequency and genotyping pruning, there are 200 SNPs
 After filtering, 1868 cases, 2938 controls and 0 missing
 After filtering, 0 males, 0 females, and 4806 of unspecified sex
+Writing main association results to [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\5_model_test\Unnamed_analysis.assoc ] 
 
-Analysis finished: Tue Feb 21 15:16:20 2012
+Analysis finished: Tue Feb 21 15:16:36 2012
 

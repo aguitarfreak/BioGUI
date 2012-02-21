@@ -35,6 +35,8 @@ public class SharedInfo {
     private File excludeOrIncludeSubjFile;
     
     private File ldPrunedOutFile;
+    
+    private File modelFile;
     /**
      * Method to set working directory
      * @param wd The working directory
@@ -133,6 +135,10 @@ public class SharedInfo {
     
     public void setLdPrunedOutFile(File file){
         ldPrunedOutFile = file;
+    }
+    
+    public void setPlinkModelFile(File file){
+        modelFile = file;
     }
     
     //-------------------------------------
@@ -273,6 +279,10 @@ public class SharedInfo {
     
     public File getLdPrunedOutFile(){
         return ldPrunedOutFile;
+    }
+    
+    public File getPlinkModelFile(){
+        return modelFile;
     }
     
 }

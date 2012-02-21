@@ -155,8 +155,10 @@ public class RunPlink{
                     }
                     break;
                 
-                case "ld_extract":
-                    //System.err.println(line);
+                case "ld_extract": //just so we creata a new data files after ld pruning
+                    break;
+                
+                case "model_tests":
                     break;
                     
             }
