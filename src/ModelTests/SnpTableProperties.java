@@ -49,8 +49,16 @@ public class SnpTableProperties {
         return snpOddsRatio.get();
     }
     
+    public SimpleStringProperty geneNameProperty(){
+        return geneName;
+    }
+    
     public String getGeneName(){
         return geneName.get();
+    }
+    
+    public void setGeneName(String name){
+        this.geneName.set(name);
     }
     
 }

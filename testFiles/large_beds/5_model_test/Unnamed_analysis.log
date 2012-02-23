@@ -10,7 +10,7 @@
 
 Web-check not implemented on this system...
 Writing this text to log file [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\5_model_test\Unnamed_analysis.log ]
-Analysis started: Tue Feb 21 15:16:36 2012
+Analysis started: Thu Feb 23 13:04:22 2012
 
 Options in effect:
 	--bfile D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\WTCCC_chosen-no_LD-EC-REGAIN
@@ -42,5 +42,5 @@ After filtering, 1868 cases, 2938 controls and 0 missing
 After filtering, 0 males, 0 females, and 4806 of unspecified sex
 Writing main association results to [ D:\Work\NetBeansProjects\BioGUI\testFiles\large_beds\5_model_test\Unnamed_analysis.assoc ] 
 
-Analysis finished: Tue Feb 21 15:16:36 2012
+Analysis finished: Thu Feb 23 13:04:22 2012
 

@@ -26,6 +26,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import Helpers.InsilicoURLReader;
 
 /**
  *
@@ -50,6 +52,8 @@ public class ModelVbox {
     public DoubleProperty runningModelTest = new SimpleDoubleProperty(0.1);
     public DoubleProperty runningAssocTest = new SimpleDoubleProperty(0.1);
     private DoubleProperty calculatingTopSnps = new SimpleDoubleProperty(0.1);
+    
+    private ChoiceBox geneDbCb;
     
     public ModelVbox(GuiHelper guiHelp){
         gh = guiHelp;
@@ -118,26 +122,48 @@ public class ModelVbox {
         geneNameCol.setCellValueFactory(
             new PropertyValueFactory<SnpTableProperties,String>("geneName")
         );
+        Callback<TableColumn, TableCell> cellFactory = 
+            new Callback<TableColumn, TableCell>() {
+                public TableCell call(TableColumn p) {
+                    return new EditingCell();
+            }
+        };
+        geneNameCol.setCellFactory(cellFactory);
         
         table = new TableView<SnpTableProperties>();
+        table.setEditable(true);
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 	table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         table.getColumns().addAll(chromosomeCol, snpNameCol, geneNameCol, testTypeCol,pValueCol,oddsRatioCol);
-        
+        geneNameCol.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<SnpTableProperties, String>>() {
+            @Override public void handle(TableColumn.CellEditEvent<SnpTableProperties, String> t) {
+                ((SnpTableProperties)t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())).setGeneName(t.getNewValue());
+            }
+        });
         modelVbox.getChildren().add(table);
         
-        StackPane bottomStack = new StackPane();
+        HBox bottomHbox = new HBox();
+        bottomHbox.setSpacing(200);
             HBox searchHbox = new HBox();
-            searchHbox.setAlignment(Pos.BASELINE_LEFT);
                 searchField = new TextField();
                 searchField.setPromptText("gene/snp");
                 Button searchBtn = new Button("Search");
                 searchHbox.getChildren().addAll(searchField,searchBtn);
-            Button geneNamesBtn = new Button("Get GENE names");
-                geneNamesBtn.setAlignment(Pos.TOP_RIGHT);
-                modelVbox.getChildren().add(geneNamesBtn);
-        bottomStack.getChildren().addAll(searchHbox,geneNamesBtn);
-        modelVbox.getChildren().add(bottomStack);
-        
+            HBox geneHbox = new HBox();
+            geneHbox.setSpacing(5);
+                Button geneNamesBtn = new Button("Get GENE names");
+                geneDbCb = new ChoiceBox();
+                    geneDbCb.setItems(FXCollections.observableArrayList("NCBI", "Insilico"));
+                    geneDbCb.setValue(geneDbCb.getItems().get(1));
+                geneHbox.getChildren().addAll(geneNamesBtn,geneDbCb);
+                HBox geneProgHbox = new HBox();
+                    ProgressIndicator genePin = new ProgressIndicator(-1);
+                    genePin.setMaxSize(5, 5);
+                    geneProgHbox.getChildren().addAll(genePin,new Label("Retrieving gene names..."));
+                geneHbox.getChildren().add(geneProgHbox);
+        bottomHbox.getChildren().addAll(searchHbox,geneHbox);
+        modelVbox.getChildren().add(bottomHbox);
         
         
         //-------------actions----------------------------//
@@ -158,7 +184,17 @@ public class ModelVbox {
                     }
                 }
             });
- 
+        searchBtn.disableProperty().bind(updateSnpInfo.runningProperty());
+        
+        geneNamesBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                if(!updateSnpInfo.isRunning())
+                    updateSnpInfo.restart();
+            }
+        });
+        geneNamesBtn.disableProperty().bind(updateSnpInfo.runningProperty());
+        geneProgHbox.visibleProperty().bind(updateSnpInfo.runningProperty());
     }
     
     public void updateModelData(){
@@ -186,7 +222,6 @@ public class ModelVbox {
         Map<String, String[]> assoc = frh.getAssocMap();
         
         table.getItems().clear();
-        list.clear();
         
         for(String[] m: model){
             list.add(new SnpTableProperties(m[frh.getChrCol()],
@@ -212,10 +247,32 @@ public class ModelVbox {
             return new Task() {
             @Override 
                 protected Object call() throws InterruptedException {
-                    
-                    
-                    
+                    runModelBtn.setDisable(true);
                 
+                    String separator;
+                    if(geneDbCb.getSelectionModel().getSelectedItem().equals("NCBI")){
+                        separator = ",";
+                    }else{
+                        separator = "\n";
+                    }
+                    
+                    StringBuilder snps = new StringBuilder();
+                    for(SnpTableProperties snp : table.getItems()){
+                        if(snp.getGeneName()=="" && !snp.getGeneName().contains("*"));
+                            snps.append(snp.getSnpName()+separator);
+                    }
+                    
+                    if(separator.equals("\n")){
+                        InsilicoURLReader insilicoDb = new InsilicoURLReader(snps.toString());
+                        for(SnpTableProperties snp : table.getItems()){
+                            if(snp.getGeneName()=="" && !snp.getGeneName().contains("*"))
+                                snp.setGeneName(insilicoDb.getSnpGeneMap().get(snp.getSnpName()));
+                        }
+                    }else{
+                        
+                    }
+                    
+                    runModelBtn.setDisable(false);
                     return true;
                 }
             };

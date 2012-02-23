@@ -4,8 +4,6 @@
  */
 package MemoryView;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 
