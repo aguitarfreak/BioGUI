@@ -445,6 +445,9 @@ public class AnalysisScene {
                     runPlinkDataFilters.cancel();
                 if(runModelTest.isRunning())
                     runModelTest.cancel();
+                if(filterPane.mVbox.updateSnpInfo.isRunning())
+                    filterPane.mVbox.updateSnpInfo.cancel();
+                
                 mpc.timer.cancel();
             }
         });

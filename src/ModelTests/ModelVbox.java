@@ -28,6 +28,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import Helpers.InsilicoURLReader;
+import Helpers.NCBIURLReader;
 
 /**
  *
@@ -158,9 +159,11 @@ public class ModelVbox {
                     geneDbCb.setValue(geneDbCb.getItems().get(1));
                 geneHbox.getChildren().addAll(geneNamesBtn,geneDbCb);
                 HBox geneProgHbox = new HBox();
+                geneProgHbox.setSpacing(5);
                     ProgressIndicator genePin = new ProgressIndicator(-1);
                     genePin.setMaxSize(5, 5);
-                    geneProgHbox.getChildren().addAll(genePin,new Label("Retrieving gene names..."));
+                    Button geneCancelBtn = new Button("Cancel");
+                    geneProgHbox.getChildren().addAll(genePin,new Label("Retrieving gene names..."),geneCancelBtn);
                 geneHbox.getChildren().add(geneProgHbox);
         bottomHbox.getChildren().addAll(searchHbox,geneHbox);
         modelVbox.getChildren().add(bottomHbox);
@@ -193,6 +196,16 @@ public class ModelVbox {
                     updateSnpInfo.restart();
             }
         });
+        geneCancelBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                if(updateSnpInfo.isRunning()){
+                    updateSnpInfo.cancel();
+                    runModelBtn.setDisable(false);
+                }
+            }
+        });
+        
         geneNamesBtn.disableProperty().bind(updateSnpInfo.runningProperty());
         geneProgHbox.visibleProperty().bind(updateSnpInfo.runningProperty());
     }
@@ -222,6 +235,7 @@ public class ModelVbox {
         Map<String, String[]> assoc = frh.getAssocMap();
         
         table.getItems().clear();
+        list.clear();
         
         for(String[] m: model){
             list.add(new SnpTableProperties(m[frh.getChrCol()],
@@ -238,10 +252,7 @@ public class ModelVbox {
         
     }
     
-    
-    
-    
-    final Service updateSnpInfo = new Service(){
+    final public Service updateSnpInfo = new Service(){
         @Override 
         protected Task createTask() {
             return new Task() {
@@ -252,24 +263,33 @@ public class ModelVbox {
                     String separator;
                     if(geneDbCb.getSelectionModel().getSelectedItem().equals("NCBI")){
                         separator = ",";
-                    }else{
+                        StringBuilder rsid = new StringBuilder();
+                        List<String> affyId = new ArrayList<>();
+                        for(SnpTableProperties snp : table.getItems()){
+                            if(snp.getGeneName().equals("") && !snp.getGeneName().contains("*"))
+                                if(snp.getSnpName().contains("rs"))
+                                    rsid.append(snp.getSnpName()).append(separator);
+                                else if(snp.getSnpName().contains("SNP"))
+                                    affyId.add(snp.getSnpName());
+                        }
+                        NCBIURLReader ncbiDb = new NCBIURLReader(rsid.toString(),affyId);
+                        for(SnpTableProperties snp : table.getItems()){
+                            if(snp.getGeneName().equals("") && !snp.getGeneName().contains("*"))
+                                snp.setGeneName(ncbiDb.getSnpGeneMap().get(snp.getSnpName()));
+                        }
+                        
+                    }else if(geneDbCb.getSelectionModel().getSelectedItem().equals("Insilico")){
                         separator = "\n";
-                    }
-                    
-                    StringBuilder snps = new StringBuilder();
-                    for(SnpTableProperties snp : table.getItems()){
-                        if(snp.getGeneName()=="" && !snp.getGeneName().contains("*"));
-                            snps.append(snp.getSnpName()+separator);
-                    }
-                    
-                    if(separator.equals("\n")){
+                        StringBuilder snps = new StringBuilder();
+                        for(SnpTableProperties snp : table.getItems()){
+                            if(snp.getGeneName().equals("") && !snp.getGeneName().contains("*"))
+                                snps.append(snp.getSnpName()).append(separator);
+                        }
                         InsilicoURLReader insilicoDb = new InsilicoURLReader(snps.toString());
                         for(SnpTableProperties snp : table.getItems()){
-                            if(snp.getGeneName()=="" && !snp.getGeneName().contains("*"))
+                            if(snp.getGeneName().equals("") && !snp.getGeneName().contains("*"))
                                 snp.setGeneName(insilicoDb.getSnpGeneMap().get(snp.getSnpName()));
                         }
-                    }else{
-                        
                     }
                     
                     runModelBtn.setDisable(false);
