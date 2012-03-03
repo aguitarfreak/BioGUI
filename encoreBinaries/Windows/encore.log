@@ -1,0 +1,19 @@
+17 (of 17) markers to be included from [ ..\plink\extra.map ]
+89 individuals read from [ ..\plink\extra.ped ] 
+89 individuals with nonmissing phenotypes
+Assuming a disease phenotype (1=unaff, 2=aff, 0=miss)
+Missing phenotype value is also -9
+48 cases, 41 controls and 0 missing
+44 males, 45 females, and 0 of unspecified sex
+Before frequency and genotyping pruning, there are 17 SNPs
+89 founders and 0 non-founders found
+Total genotyping rate in remaining individuals is 0.996034
+0 SNPs failed missingness test ( GENO > 1 )
+0 SNPs failed frequency test ( MAF < 0 )
+After frequency and genotyping pruning, there are 17 SNPs
+After filtering, 48 cases, 41 controls and 0 missing
+After filtering, 44 males, 45 females, and 0 of unspecified sex
+Filtering founders only ... 89 individuals remaining
+
+Analysis finished: Mon Feb 27 17:08:49 2012
+

@@ -1,0 +1,10 @@
+#folders
+testOutput
+build
+dist
+#class files
+*.class
+#built files
+*.html
+*.jar
+*.jnlp
